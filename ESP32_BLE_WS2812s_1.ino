@@ -38,27 +38,27 @@ class MyCallbacks: public BLECharacteristicCallbacks {
     {
     case 1:
         colorWipe(strip.Color(255, 0, 0), 20); // Red
-        rgbFadeOut(255,0,0,50);
+        rgbFadeOut(255,0,0,20);
         break;
     case 2:
         colorWipe(strip.Color(0, 255, 0), 20); // Green
-        rgbFadeOut(0,255,0,50);
+        rgbFadeOut(0,255,0,20);
         break;
     case 3:
         colorWipe(strip.Color(0, 0, 255), 20); // Blue
-        rgbFadeOut(0,0,255,50);
+        rgbFadeOut(0,0,255,20);
         break;
     case 4:
         theaterChase(strip.Color(255, 0, 0), 20); // Red
-        rgbFadeOut(255,0,0,50);
+        rgbFadeOut(255,0,0,20);
         break;
     case 5:
         theaterChase(strip.Color(0, 255, 0), 20); // Green
-        rgbFadeOut(0,255,0,50);
+        rgbFadeOut(0,255,0,20);
         break;
     case 6:
         theaterChase(strip.Color(255, 0, 255), 50); // Cyan
-        rgbFadeOut(255,0,255,50);
+        rgbFadeOut(255,0,255,20);
         break;
     case 7:
         rainbow(10);
@@ -174,7 +174,7 @@ void rgbFadeInAndOut(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait) {
     delay(wait);
   }
 
-  for(uint8_t b=255; b > 0; b--) {
+  for(int16_t b=255; b > 0; b-=10) {
       //strip.fill(strip.Color(red * b/255, green * b/255 , blue * b/255),0,strip.numPixels()-1
       /*);
      for(uint8_t i=0; i < strip.numPixels(); i++) {
@@ -190,8 +190,9 @@ void rgbFadeInAndOut(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait) {
 
 
 void rgbFadeOut(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait) {
-  for(uint8_t b=255; b > 0; b--) {
+  for(int16_t b=255; b > 0; b-=10) {
       strip.fill(strip.Color(red * b/255, green * b/255 , blue * b/255),0,strip.numPixels());
+      Serial.println("r= " + String(red * b/255) + "g= " + String(green * b/255) + "b= " + String(blue * b/255));
       strip.show();
       delay(wait);
   }
@@ -288,13 +289,16 @@ void setup() {
   delay(700);
   strip.clear();
   strip.show();
-    
+
 }
+
+int x = 1;
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(2000);
-  
+  delay(10000);
+  pCharacteristic->setValue("AAA");
+  pCharacteristic->notify();
 }
 
 
