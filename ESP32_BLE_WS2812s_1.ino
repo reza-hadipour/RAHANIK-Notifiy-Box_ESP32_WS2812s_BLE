@@ -192,7 +192,7 @@ void rgbFadeInAndOut(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait) {
 void rgbFadeOut(uint8_t red, uint8_t green, uint8_t blue, uint8_t wait) {
   for(int16_t b=255; b > 0; b-=10) {
       strip.fill(strip.Color(red * b/255, green * b/255 , blue * b/255),0,strip.numPixels());
-      Serial.println("r= " + String(red * b/255) + "g= " + String(green * b/255) + "b= " + String(blue * b/255));
+      //Serial.println("r= " + String(red * b/255) + "g= " + String(green * b/255) + "b= " + String(blue * b/255));
       strip.show();
       delay(wait);
   }
@@ -230,7 +230,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
 }
 };
 
-
+BLECharacteristic* pCharacteristic = NULL;
 void setup() {
   Serial.begin(115200);
 
@@ -246,7 +246,7 @@ void setup() {
   BLEService *pService = pServer->createService(SERVICE_UUID);
   pServer->setCallbacks(new MyServerCallbacks());
   
-  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
+  pCharacteristic = pService->createCharacteristic(
                                          CHARACTERISTIC_UUID,
                                          BLECharacteristic::PROPERTY_READ |
                                          BLECharacteristic::PROPERTY_WRITE
@@ -297,7 +297,8 @@ int x = 1;
 void loop() {
   // put your main code here, to run repeatedly:
   delay(10000);
-  pCharacteristic->setValue("AAA");
+  pCharacteristic->setValue((uint8_t*)&x, 4);
+  x++;
   pCharacteristic->notify();
 }
 
